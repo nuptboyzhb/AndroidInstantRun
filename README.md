@@ -1303,9 +1303,9 @@ demo的MainActivity源代码<br>
 ###app运行期：
 1.获取更改后资源resource.ap_的路径<br>
 2.设置ClassLoader。setupClassLoader：<br>
-使用IncrementalClassLoader加载apk的代码，将原有的BootClassLoader → PathClassLoader改为BootClassLoader → IncrementalClassLoader → PathClassLoader继承关系。
+使用IncrementalClassLoader加载apk的代码，将原有的BootClassLoader → PathClassLoader改为BootClassLoader → IncrementalClassLoader → PathClassLoader继承关系。<br>
 3.createRealApplication：<br>
-创建apk真实的application
+创建apk真实的application<br>
 4.monkeyPatchApplication<br>
 反射替换ActivityThread中的各种Application成员变量<br>
 5.monkeyPatchExistingResource<br>
@@ -1314,18 +1314,22 @@ demo的MainActivity源代码<br>
 7.启动Server，Socket接收patch列表<br>
 
 ###有代码修改时
-1.生成对应的$override类
-2.生成AppPatchesLoaderImpl类，记录修改的类列表
-3.打包成patch，通过socket传递给app
-4.app的server接收到patch之后，分别按照handleColdSwapPatch、handleHotSwapPatch、handleResourcePatch等待对patch进行处理
-5.restart使patch生效
+1.生成对应的$override类<br>
+2.生成AppPatchesLoaderImpl类，记录修改的类列表<br>
+3.打包成patch，通过socket传递给app<br>
+4.app的server接收到patch之后，分别按照handleColdSwapPatch、handleHotSwapPatch、handleResourcePatch等待对patch进行处理<br>
+5.restart使patch生效<br>
 
 ##Instant Run的借鉴意义
 
-###Android插件化框架
+###Android插件化框架改进
 ###Android热修复方案
 ###app加壳<br>
 <未完待续>
+
+##InstantRun源码
+我自己通过jd-gui反编译获取的，可以参考：<br>[https://github.com/nuptboyzhb/AndroidInstantRun](https://github.com/nuptboyzhb/AndroidInstantRun)
+<br>
 ##参考博文
 [1].[Instant Run: How Does it Work?!](https://medium.com/google-developers/instant-run-how-does-it-work-294a1633367f#.oqes7tpmm)<br>
 [2].[Instant Run工作原理及用法](http://www.jianshu.com/p/2e23ba9ff14b)<br>
