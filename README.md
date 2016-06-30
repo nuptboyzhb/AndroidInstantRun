@@ -1,5 +1,6 @@
-#Android Studio:深度理解Instant Run原理以及源码分析
+#深度理解Android InstantRun原理以及源码分析
 
+@Author 莫川
 ##Instant Run官方介绍
 简单介绍一下Instant Run,它是Android Studio2.0以后新增的一个运行机制，能够显著减少你第二次及以后的构建和部署时间。简单通俗的解释就是，当你在Android Studio中改了你的代码，Instant Run可以很快的让你看到你修改的效果。而在没有Instant Run之前，你的一个小小的修改，都肯能需要几十秒甚至更长的等待才能看到修改后的效果。
 ###传统的代码修改及编译部署流程
@@ -23,22 +24,22 @@ app需要重启，比如继承关系的改变或方法的签名变化等。
 
 上述说这么多概念，估计大家对Instant Run应该有了大体的认知了。那么它的实现原理是什么呢？其实，在没有看案例之前，我基本上可以猜测到Instant Run的思路，基于目前比较火的插件化框架，是比较容易理解Instant Run的。但Instant Run毕竟是Google官方的工具，具有很好的借鉴意义。
 ##Demo案例
-新建一个简单的android studio项目，新建自己的MyApplication，在AndroidManifest文件中设置： 
-![4.png](4.png)<br>
+新建一个简单的android studio项目，新建自己的MyApplication，在AndroidManifest文件中设置：<br> 
+![4.png](4.PNG)<br>
 首先，我们先反编译一下APK的构成：
-使用的工具：d2j-dex2jar 和jd-gui
-![3.png](3.png)<br>
+使用的工具：d2j-dex2jar 和jd-gui<br>
+![3.png](3.PNG)<br>
 里面有2个dex文件和一个instant-run.zip文件。首先分别看一下两个dex文件的源码：<br>
 classes.dex的反编译之后的源码：<br>
-![5.png](5.png)<br>
+![5.png](5.PNG)<br>
 里面只有一个AppInfo，保存了app的基本信息，主要包含了包名和applicationClass。<br>
 classes2.dex反编译之后的源码：<br>
-![6.png](6.png)<br>
-我们赫然发现，两个dex中竟然没有一句我们自己写的代码？？那么代码在哪里呢？你可能猜到，app真正的业务dex在instant-run.zip中。解压instant-run.zip之后，如下图所示：
-![7.png](7.png)<br>
+![6.png](6.PNG)<br>
+我们赫然发现，两个dex中竟然没有一句我们自己写的代码？？那么代码在哪里呢？你可能猜到，app真正的业务dex在instant-run.zip中。解压instant-run.zip之后，如下图所示：<br>
+![7.png](7.PNG)<br>
 反编译之后，我们会发现，我们真正的业务代码都在这里。<br>
-另外，我们再decode看一下AndroidManifest文件
-![8.png](8.png)<br>
+另外，我们再decode看一下AndroidManifest文件<br>
+![8.png](8.PNG)<br>
 //TODO
 我们发现，我们的application也被替换了，替换成了com.android.tools.fd.runtime.BootstrapApplication
 
@@ -256,9 +257,9 @@ IncrementalClassLoader的源码如下：
 ```
 
 inject方法是用来设置classloader的父子顺序的，使用IncrementalClassLoader来加载dex。由于ClassLoader的双亲委托模式，也就是委托父类加载类，父类中找不到再在本ClassLoader中查找。
-调用之后的效果如下图所示：
+调用之后的效果如下图所示：<br>
 ![classloader.png](classloader.png)
-我们可以在MyApplication中，用代码验证一下
+我们可以在MyApplication中，用代码验证一下<br>
 ```java
      
      @Override
